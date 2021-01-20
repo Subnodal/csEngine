@@ -15,15 +15,19 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         uiFont: `"Overpass", "Roboto", sans-serif`,
         background: "#072047",
         gutter: "#0b2f68",
-        text: "white"
+        text: "white",
+        keyword: "red"
     };
 
-    exports.createStyler = function(theme = exports.defaultTheme) {
+    exports.createStyler = function(cseInstance) {
         var newStyler = new styler.Styler();
 
         function addStyle(style) {
             newStyler.styleCollection.push(style);
         }
+
+        var options = cseInstance.options || {};
+        var theme = {...exports.defaultTheme, ...(options.theme || {})};
     
         addStyle(new styler.Style("editorSpace", `
             position: relative;
@@ -44,7 +48,8 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         `));
 
         addStyle(new styler.Style("editorInput", `
-            position: absolute;
+            position: relative;
+            display: inline-block;
             top: 0;
             left: 3em;
             width: calc(100% - 3.2em);
@@ -53,8 +58,13 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             font-family: ${theme.codeFont};
             color: ${theme.text};
             overflow: auto;
+            white-space: ${options.wordWrap ? "pre" : "pre-wrap"};
             outline: none;
         `));
+
+        addStyle(new styler.Style("syntax", `
+            color: ${theme.keyword}
+        `, "[cs-syntax='keyword']"));
 
         return newStyler;
     };

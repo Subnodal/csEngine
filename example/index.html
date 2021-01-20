@@ -5,11 +5,16 @@
         <link rel="stylesheet" href="style.css">
         <script src="https://cdn.subnodal.com/lib/submodules.min.js"></script>
         <script src="/csengine.js"></script>
+        <script src="/input.js"></script>
         <script src="/styler.js"></script>
         <script src="/design.js"></script>
+        <script src="/formatter.js"></script>
         <script src="script.js"></script>
     </head>
     <body>
-        <div id="injectionParent"></div>
+        <div id="injectionParent">function hello() {
+    hi();
+}</div>
+        <div contenteditable="true" style="display: inline-block;"></div>
     </body>
 </html>

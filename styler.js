@@ -17,7 +17,7 @@ namespace("com.subnodal.codeslate.engine.styler", function(exports) {
             var css = "";
 
             for (var i = 0; i < this.styleCollection.length; i++) {
-                css += `[cs-part="${this.styleCollection[i].part}"]${this.styleCollection[i].pseudo} {${this.styleCollection[i].rules}}`;
+                css += `[cs-part="${this.styleCollection[i].part}"]${this.styleCollection[i].specification} {${this.styleCollection[i].rules}}`;
             }
 
             return css;
@@ -25,10 +25,10 @@ namespace("com.subnodal.codeslate.engine.styler", function(exports) {
     };
 
     exports.Style = class {
-        constructor(part, rules, pseudo = "") {
+        constructor(part, rules, specification = "") {
             this.part = part;
             this.rules = rules;
-            this.pseudo = pseudo;
+            this.specification = specification;
         }
     };
 });

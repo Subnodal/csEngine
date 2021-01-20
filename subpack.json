@@ -2,6 +2,10 @@
     "identifier": "com.subnodal.codeslate.engine",
     "outname": "csengine",
     "modules": [
-        "csengine.js"
+        "csengine.js",
+        "input.js",
+        "styler.js",
+        "design.js",
+        "formatter.js"
     ]
 }
