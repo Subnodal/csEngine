@@ -1,0 +1,7 @@
+{
+    "identifier": "com.subnodal.codeslate.engine",
+    "outname": "csengine",
+    "modules": [
+        "csengine.js"
+    ]
+}
