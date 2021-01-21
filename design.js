@@ -23,6 +23,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         keyword: "#1ee2ae",
         string: "#1faee2",
         number: "#a0c5ff",
+        operator: "#448dff",
         atom: "#1faee2",
         comment: "#536889; font-style: italic;"
     };
@@ -117,6 +118,10 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         addStyle(new styler.Style("syntax", `
             color: ${theme.number};
         `, "[cs-syntax='number']"));
+
+        addStyle(new styler.Style("syntax", `
+            color: ${theme.operator};
+        `, "[cs-syntax='operator']"));
 
         addStyle(new styler.Style("syntax", `
             color: ${theme.atom};

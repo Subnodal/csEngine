@@ -74,7 +74,7 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
         }
 
         if (normaliseHtml(target.innerHTML) != normaliseHtml(newContents)) {
-            target.innerHTML = newContents.replace(/\n$/, "");
+            target.innerHTML = newContents.replace(/\n$/,  "");
 
             return true;
         }

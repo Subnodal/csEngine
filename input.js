@@ -105,26 +105,20 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
             roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
 
             editorInputElement.addEventListener("keydown", function(event) {
+                if (event.keyCode == 9) { // Tab
+                    event.preventDefault();
+                }
+
                 if (event.keyCode == 13) { // Enter
                     document.execCommand("insertHTML", false, "\n");
 
                     event.preventDefault();
                 }
 
-                if (event.keyCode == 38) { // Up
+                if (event.keyCode == 38 && roughCurrentLinePosition > 0) { // Up
                     roughCurrentLinePosition--;
-                } else if (event.keyCode == 40 || event.keyCode == 13) { // Down, Enter
+                } else if ((event.keyCode == 40 || event.keyCode == 13) && roughCurrentLinePosition < editorInputElement.innerHTML.split("\n").length) { // Down, Enter
                     roughCurrentLinePosition++;
-                } else if (
-                    event.keyCode == 37 ||
-                    event.keyCode == 39 ||
-                    event.keyCode == 8 ||
-                    event.keyCode == 33 ||
-                    event.keyCode == 34 ||
-                    event.keyCode == 35 ||
-                    event.keyCode == 36
-                ) { // Left, Right, Backspace, PgUp, PgDn, Home, End
-                    roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
                 }
             });
 
@@ -135,7 +129,35 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
             editorInputElement.addEventListener("keyup", function(event) {
                 var selection = exports.saveSelection(editorInputElement);
 
-                if (cseInstance.render(Math.max(roughCurrentLinePosition - 10, 0), roughCurrentLinePosition + 10)) {
+                // TODO: Add tab size configurability
+                // TODO: Add ability to select multiple lines to indent
+                if (event.keyCode == 9) { // Tab
+                    var lines = editorInputElement.innerHTML.split("\n");
+                    var indentationLevel = Math.floor(lines[roughCurrentLinePosition].search(/\S|$/) / 4);
+                    var spacesToNextIndentation = 4 - (lines[roughCurrentLinePosition].search(/\S|$/) % 4);
+
+                    if (!event.shiftKey) {
+                        lines[roughCurrentLinePosition] = " ".repeat(spacesToNextIndentation) + lines[roughCurrentLinePosition];
+                        editorInputElement.innerHTML = lines.join("\n");
+
+                        selection.start += spacesToNextIndentation;
+                        selection.end += spacesToNextIndentation;
+                    } else {
+                        selection.start -= Math.max(spacesToNextIndentation, 0);
+                        selection.end -= Math.max(spacesToNextIndentation, 0);
+
+                        lines[roughCurrentLinePosition] = " ".repeat((indentationLevel - 1) * 4) + lines[roughCurrentLinePosition].trimStart();
+                        editorInputElement.innerHTML = lines.join("\n");
+                    }
+
+                    event.preventDefault();
+
+                    exports.restoreSelection(editorInputElement, selection);
+
+                    roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+                }
+
+                if (cseInstance.render(Math.max(roughCurrentLinePosition - 50, 0), roughCurrentLinePosition + 50)) {
                     exports.restoreSelection(editorInputElement, selection);
                 }
 
@@ -153,6 +175,18 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
                 if (window.getSelection().getRangeAt(0).getBoundingClientRect().top > editorInputElement.getBoundingClientRect().bottom - parseInt(getComputedStyle(editorInputElement).paddingBottom)) {
                     editorInputElement.scrollTop = editorInputElement.scrollHeight + (editorInputElement.offsetHeight - editorInputElement.clientHeight);
+                }
+
+                if (
+                    event.keyCode == 37 ||
+                    event.keyCode == 39 ||
+                    event.keyCode == 8 ||
+                    event.keyCode == 33 ||
+                    event.keyCode == 34 ||
+                    event.keyCode == 35 ||
+                    event.keyCode == 36
+                ) { // Left, Right, Backspace, PgUp, PgDn, Home, End
+                    roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
                 }
             });
 
