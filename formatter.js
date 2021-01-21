@@ -27,7 +27,7 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
             var syntaxProperties = syntax[i];
 
             code = code.replace(
-                new RegExp(syntaxProperties.regex || "", "g"),
+                new RegExp(syntaxProperties.regex || "", "gs"),
                 function() {
                     return (
                         (syntaxProperties.spellcheck ? HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK : HTML_ESCAPE_SYNTAX_OPEN) +

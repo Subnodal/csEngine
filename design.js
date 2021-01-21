@@ -22,7 +22,8 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         keyword: "#1ee2ae",
         string: "#1faee2",
         number: "#a0c5ff",
-        atom: "#1faee2"
+        atom: "#1faee2",
+        comment: "#536889; font-style: italic;"
     };
 
     exports.createStyler = function(cseInstance) {
@@ -96,6 +97,10 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         addStyle(new styler.Style("syntax", `
             color: ${theme.atom};
         `, "[cs-syntax='atom']"));
+
+        addStyle(new styler.Style("syntax", `
+            color: ${theme.comment};
+        `, "[cs-syntax='comment']"));
 
         return newStyler;
     };
