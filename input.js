@@ -68,11 +68,20 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
         var newSelection = window.getSelection();
 
         newSelection.removeAllRanges();
+        console.log(range);
         newSelection.addRange(range);
     };
 
     exports.register = function(cseInstance) {
         cseInstance.withPart("editorInput", function(editorInputElement) {
+            editorInputElement.addEventListener("keydown", function(event) {
+                if (event.keyCode == 13) {
+                    document.execCommand("insertHTML", false, "\n");
+
+                    event.preventDefault();
+                }
+            });
+
             editorInputElement.addEventListener("keyup", function(event) {
                 var selection = exports.saveSelection(editorInputElement);
 

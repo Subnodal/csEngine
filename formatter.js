@@ -32,7 +32,14 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
     }
 
     function normaliseHtml(code) {
-        return code.trim().replace(/&nbsp;/g, "\xA0");
+        return code.trim()
+            .replace(/&nbsp;/g, "\xA0")
+            .replace(/<div>/g, "")
+            .replace(/<\/div>/g, "")
+            .replace(/<br>/g, "")
+            .replace(/\n/g, "")
+            .trim()
+        ;
     }
 
     exports.format = function(cseInstance, target) {

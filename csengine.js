@@ -32,7 +32,7 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             var code = "";
             
             this.withPart("editorInput", function(editorInputElement) {
-                code = editorInputElement.innerText;
+                code = editorInputElement.innerText.replace(/\n$/, "");
             });
 
             return code;
@@ -40,7 +40,11 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
 
         set code(code) {
             this.withPart("editorInput", function(editorInputElement) {
-                editorInputElement.innerText = code;
+                if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1) {
+                    editorInputElement.innerText = code;
+                } else {
+                    editorInputElement.innerText = code + "\n";
+                }
             });
 
             this.render();
