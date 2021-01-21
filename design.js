@@ -15,6 +15,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         uiFont: `"Overpass", "Roboto", sans-serif`,
         background: "#072047",
         gutter: "#0b2f68",
+        lineNumber: "#98b4e0",
         caret: "#dbe21e",
         selection: "#4688f2",
         text: "white",
@@ -42,6 +43,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             height: 100%;
             background-color: ${theme.background};
             font-family: ${theme.uiFont};
+            overflow: hidden;
         `));
 
         addStyle(new styler.Style("editorGutter", `
@@ -54,18 +56,26 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             font-family: ${theme.codeFont};
         `));
 
+        addStyle(new styler.Style("editorGutterLine", `
+            position: absolute;
+            right: 0.5em;
+            color: ${theme.lineNumber};
+        `));
+
         addStyle(new styler.Style("editorInput", `
             position: relative;
             display: inline-block;
             top: 0;
             left: 3em;
             width: calc(100% - 3.2em);
-            height: 100%;
+            height: calc(100% - 2em);
+            padding-bottom: 2em;
             padding-left: 0.2em;
             font-family: ${theme.codeFont};
             color: ${theme.text};
             overflow: auto;
-            white-space: ${options.wordWrap ? "pre" : "pre-wrap"};
+            white-space: pre;
+            word-break: ${options.wordWrap ? "break-all" : "keep-all"};
             outline: none;
             caret-color: ${theme.caret};
         `));
@@ -73,6 +83,20 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         addStyle(new styler.Style("editorInput", `
             background: ${theme.selection};
         `, "::selection"));
+
+        addStyle(new styler.Style("editorMeasurer", `
+            position: absolute;
+            top: 0;
+            left: 3em;
+            width: calc(100% - 3.2em);
+            padding-left: 0.2em;
+            font-family: ${theme.codeFont};
+            color: ${theme.text};
+            overflow: auto;
+            white-space: pre;
+            word-break: ${options.wordWrap ? "break-all" : "keep-all"};
+            visibility: hidden;
+        `));
 
         addStyle(new styler.Style("syntax", `
             background-color: ${theme.selection};

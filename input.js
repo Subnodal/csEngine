@@ -8,6 +8,12 @@
 */
 
 namespace("com.subnodal.codeslate.engine.input", function(exports) {
+    var measurer = require("com.subnodal.codeslate.engine.measurer");
+    var gutter = require("com.subnodal.codeslate.engine.gutter");
+
+    var gutterRenderTimeout = null;
+    var roughCurrentLinePosition = null;
+
     exports.Selection = class {
         constructor(start, end) {
             this.start = start;
@@ -71,22 +77,109 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
         newSelection.addRange(range);
     };
 
+    exports.getCurrentLinePosition = function(cseInstance) {
+        var linePosition = 0;
+
+        cseInstance.withPart("editorInput", function(editorInputElement) {
+            if (window.getSelection().rangeCount == 0) {
+                return;
+            }
+
+            var caretTop = window.getSelection().getRangeAt(0).getBoundingClientRect().top + editorInputElement.scrollTop;
+            var lineTopDistances = measurer.getLineTopDistances(cseInstance);
+
+            for (var i = 0; i < lineTopDistances.length; i++) {
+                if (i == lineTopDistances.length - 1 || caretTop < lineTopDistances[i + 1]) {
+                    linePosition = i;
+
+                    break;
+                }
+            }
+        });
+
+        return linePosition;
+    };
+
     exports.register = function(cseInstance) {
         cseInstance.withPart("editorInput", function(editorInputElement) {
+            roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+
             editorInputElement.addEventListener("keydown", function(event) {
-                if (event.keyCode == 13) {
+                if (event.keyCode == 13) { // Enter
                     document.execCommand("insertHTML", false, "\n");
 
                     event.preventDefault();
                 }
+
+                if (event.keyCode == 38) { // Up
+                    roughCurrentLinePosition--;
+                } else if (event.keyCode == 40 || event.keyCode == 13) { // Down, Enter
+                    roughCurrentLinePosition++;
+                } else if (
+                    event.keyCode == 37 ||
+                    event.keyCode == 39 ||
+                    event.keyCode == 8 ||
+                    event.keyCode == 33 ||
+                    event.keyCode == 34 ||
+                    event.keyCode == 35 ||
+                    event.keyCode == 36
+                ) { // Left, Right, Backspace, PgUp, PgDn, Home, End
+                    roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+                }
+            });
+
+            editorInputElement.addEventListener("click", function(event) {
+                roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
             });
 
             editorInputElement.addEventListener("keyup", function(event) {
                 var selection = exports.saveSelection(editorInputElement);
 
-                if (cseInstance.render()) {
+                if (cseInstance.render(Math.max(roughCurrentLinePosition - 10, 0), roughCurrentLinePosition + 10)) {
                     exports.restoreSelection(editorInputElement, selection);
                 }
+
+                if (gutterRenderTimeout != null) {
+                    clearTimeout(gutterRenderTimeout);
+                }
+
+                gutterRenderTimeout = setTimeout(function() {
+                    gutter.render(cseInstance, true);
+                }, 100);
+
+                if (window.getSelection().getRangeAt(0).getBoundingClientRect().left < editorInputElement.getBoundingClientRect().left) {
+                    editorInputElement.scrollLeft = 0;
+                }
+
+                if (window.getSelection().getRangeAt(0).getBoundingClientRect().top > editorInputElement.getBoundingClientRect().bottom - parseInt(getComputedStyle(editorInputElement).paddingBottom)) {
+                    editorInputElement.scrollTop = editorInputElement.scrollHeight + (editorInputElement.offsetHeight - editorInputElement.clientHeight);
+                }
+            });
+
+            editorInputElement.addEventListener("paste", function(event) {
+                setTimeout(function() {
+                    for (var i = 0; i < editorInputElement.innerText.split("\n").length; i += 10) {
+                        (function(i) {
+                            setTimeout(function() {
+                                var selection = exports.saveSelection(editorInputElement);
+        
+                                if (cseInstance.render(i, i + 10)) {
+                                    exports.restoreSelection(editorInputElement, selection);
+                                }
+
+                                gutter.render(cseInstance, true);
+                            }, i * 5);
+                        })(i);
+                    }
+    
+                    if (gutterRenderTimeout != null) {
+                        clearTimeout(gutterRenderTimeout);
+                    }
+                    }, 1000);
+            });
+
+            editorInputElement.addEventListener("scroll", function(event) {
+                gutter.render(cseInstance);
             });
         });
     };

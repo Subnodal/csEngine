@@ -54,11 +54,18 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
         ;
     }
 
-    exports.format = function(cseInstance, target) {
+    exports.format = function(cseInstance, target, from, to) {
         var options = cseInstance.options || {};
         var languageData = options.languageData || {};
 
-        var formattedLines = unescapeHtml(parseSyntaxTree(target.innerText, languageData.syntax || {})).split("\n");
+        var formattedLines = target.innerHTML.replace(/<br>/g, "\n").split("\n");
+        var formattedLineRange = unescapeHtml(parseSyntaxTree(target.innerText.split("\n").slice(from, to).join("\n"), languageData.syntax || {})).split("\n");
+
+        for (var i = 0; i < formattedLineRange.length; i++) {
+            if (from + i < formattedLines.length) {
+                formattedLines[from + i] = formattedLineRange[i];
+            }
+        }
 
         var newContents = "";
 

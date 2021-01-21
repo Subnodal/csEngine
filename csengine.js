@@ -11,6 +11,7 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
     var input = require("com.subnodal.codeslate.engine.input");
     var design = require("com.subnodal.codeslate.engine.design");
     var formatter = require("com.subnodal.codeslate.engine.formatter");
+    var gutter = require("com.subnodal.codeslate.engine.gutter");
 
     exports.CodeslateEngine = class {
         constructor(rootElement, options = {}) {
@@ -51,6 +52,8 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
         }
 
         inject() {
+            var thisScope = this;
+
             var styleElement = document.createElement("style");
 
             styleElement.setAttribute("cs-part", "style");
@@ -70,7 +73,13 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             editorInputElement.setAttribute("contenteditable", "true");
             editorInputElement.setAttribute("spellcheck", "false");
 
+            var editorMeasurerElement = document.createElement("div");
+
+            editorMeasurerElement.setAttribute("cs-part", "editorMeasurer");
+            editorMeasurerElement.setAttribute("aria-hidden", "true");
+
             editorSpaceElement.appendChild(editorInputElement);
+            editorSpaceElement.appendChild(editorMeasurerElement);
 
             this.rootElement.appendChild(styleElement);
             this.rootElement.appendChild(editorSpaceElement);
@@ -78,18 +87,26 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             input.register(this);
 
             this.render();
+
+            setTimeout(function() {
+                gutter.render(thisScope, true);                
+            });
         }
 
-        render() {
+        render(from = 0, to = null) {
             var thisScope = this;
             var hasUpdatedInput = false;
+            
+            if (to == null) {
+                to = this.code.split("\n").length;
+            }
 
             this.withPart("style", function(styleElement) {
                 styleElement.innerHTML = design.createStyler(thisScope).generate();
             });
 
             this.withPart("editorInput", function(editorInputElement) {
-                hasUpdatedInput = formatter.format(thisScope, editorInputElement) || hasUpdatedInput;
+                hasUpdatedInput = formatter.format(thisScope, editorInputElement, from, to) || hasUpdatedInput;
             });
 
             return hasUpdatedInput;

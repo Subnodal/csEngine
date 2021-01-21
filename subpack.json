@@ -6,6 +6,8 @@
         "input.js",
         "styler.js",
         "design.js",
-        "formatter.js"
+        "formatter.js",
+        "measurer.js",
+        "gutter.js"
     ]
 }
