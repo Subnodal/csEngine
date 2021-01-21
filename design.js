@@ -15,8 +15,11 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         uiFont: `"Overpass", "Roboto", sans-serif`,
         background: "#072047",
         gutter: "#0b2f68",
+        selection: "#4688f2",
         text: "white",
-        keyword: "red"
+        keyword: "#1ee2ae",
+        string: "#1faee2",
+        number: "#a0c5ff"
     };
 
     exports.createStyler = function(cseInstance) {
@@ -62,9 +65,25 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             outline: none;
         `));
 
+        addStyle(new styler.Style("editorInput", `
+            background: ${theme.selection};
+        `, "::selection"));
+
+        addStyle(new styler.Style("syntax", `
+            background-color: ${theme.selection};
+        `, "::selection"));
+
         addStyle(new styler.Style("syntax", `
             color: ${theme.keyword}
         `, "[cs-syntax='keyword']"));
+
+        addStyle(new styler.Style("syntax", `
+            color: ${theme.string}
+        `, "[cs-syntax='string']"));
+
+        addStyle(new styler.Style("syntax", `
+            color: ${theme.number}
+        `, "[cs-syntax='number']"));
 
         return newStyler;
     };

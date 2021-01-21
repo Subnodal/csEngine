@@ -13,6 +13,7 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
         ;
     }
 
@@ -23,7 +24,7 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
             code = code.replace(
                 new RegExp(escapeCode(syntaxProperties.regex || ""), "g"),
                 function() {
-                    return `<span cs-part="syntax" cs-syntax="${syntaxProperties.mode || ""}">${parseSyntaxTree(arguments[Number(syntaxProperties.match)], syntaxProperties.subSyntax || {})}</span>`;
+                    return `<span cs-part="syntax" cs-syntax="${syntaxProperties.type || ""}">${parseSyntaxTree(arguments[Number(syntaxProperties.match || 0)], syntaxProperties.subSyntax || {})}</span>`;
                 }
             );
         }
