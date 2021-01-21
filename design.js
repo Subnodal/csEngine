@@ -15,6 +15,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         uiFont: `"Overpass", "Roboto", sans-serif`,
         background: "#072047",
         gutter: "#0b2f68",
+        caret: "#dbe21e",
         selection: "#4688f2",
         text: "white",
         definition: "#1ee2ae; font-weight: bold;",
@@ -65,6 +66,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             overflow: auto;
             white-space: ${options.wordWrap ? "pre" : "pre-wrap"};
             outline: none;
+            caret-color: ${theme.caret};
         `));
 
         addStyle(new styler.Style("editorInput", `

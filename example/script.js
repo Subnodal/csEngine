@@ -2,7 +2,11 @@ var csengine = require("com.subnodal.codeslate.engine");
 
 var cseInstance;
 
-const SYNTAX_STRING_LOOKBEHIND = `(?=(?:(?:[^"]*"){2})*[^"]*$)(?=(?:(?:[^']*'){2})*[^']*$)(?=(?:(?:[^\`]*\`){2})*[^\`]*$)`;
+const SYNTAX_STRING_LOOKBEHIND = (
+    `(?=([^"\\\\]*(\\\\.|"([^"\\\\]*\\\\.)*[^"\\\\]*"))*[^"]*$)` + // "
+    `(?=([^'\\\\]*(\\\\.|'([^'\\\\]*\\\\.)*[^'\\\\]*'))*[^']*$)` + // '
+    `(?=([^\`\\\\]*(\\\\.|\`([^\`\\\\]*\\\\.)*[^\`\\\\]*\`))*[^\`]*$)` // \`
+);
 
 window.onload = function() {
     // Some Regex syntax from https://github.com/atom/language-javascript/blob/master/grammars/javascript.cson
@@ -11,7 +15,7 @@ window.onload = function() {
             syntax: [
                 {type: "definition", regex: `${SYNTAX_STRING_LOOKBEHIND}\\b(function|var|const|let)\\b`, match: 0},
                 {type: "keyword", regex: `${SYNTAX_STRING_LOOKBEHIND}\\b(if|else|for|do|while|try|catch|finally|break|continue|return)\\b`},
-                {type: "string", regex: `"(.*?)"`, match: 0, spellcheck: true},
+                {type: "string", regex: `"(?:[^"\\\\]|\\\\.)*"|'(?:[^'\\\\]|\\\\.)*'|\`(?:[^\`\\\\]|\\\\.)*\``, match: 0, spellcheck: true},
                 {type: "number", regex: `\\b(?<!\\$)0(x|X)[0-9a-fA-F]+n?\\b(?!\\$)`, match: 0}, // Hex
                 {type: "number", regex: `\\b(?<!\\$)0(b|B)[01]+n?\\b(?!\\$)`, match: 0}, // Bin
                 {type: "number", regex: `\\b(?<!\\$)0(o|O)?[0-7]+n?\\b(?!\\$)`, match: 0}, // Oct
