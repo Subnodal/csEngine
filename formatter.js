@@ -8,12 +8,17 @@
 */
 
 namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
-    function escapeCode(code) {
+    const HTML_ESCAPE_SYNTAX_OPEN = "\x02"; // STX
+    const HTML_ESCAPE_SYNTAX_CLOSE = "\x03"; // ETX
+    const HTML_ESCAPE_SYNTAX_END = "\x04"; // EOT
+    const HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK = "\x05"; // ENQ
+
+    function unescapeHtml(code) {
         return code
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
+            .replace(new RegExp(HTML_ESCAPE_SYNTAX_OPEN, "g"), `<span cs-part="syntax" cs-syntax="`)
+            .replace(new RegExp(HTML_ESCAPE_SYNTAX_CLOSE, "g"), `">`)
+            .replace(new RegExp(HTML_ESCAPE_SYNTAX_END, "g"), `</span>`)
+            .replace(new RegExp(HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK, "g"), `<span spellcheck="true" cs-part="syntax" cs-syntax="`)
         ;
     }
 
@@ -22,9 +27,15 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
             var syntaxProperties = syntax[i];
 
             code = code.replace(
-                new RegExp(escapeCode(syntaxProperties.regex || ""), "g"),
+                new RegExp(syntaxProperties.regex || "", "g"),
                 function() {
-                    return `<span cs-part="syntax" cs-syntax="${syntaxProperties.type || ""}">${parseSyntaxTree(arguments[Number(syntaxProperties.match || 0)], syntaxProperties.subSyntax || {})}</span>`;
+                    return (
+                        (syntaxProperties.spellcheck ? HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK : HTML_ESCAPE_SYNTAX_OPEN) +
+                        (syntaxProperties.type || "") +
+                        HTML_ESCAPE_SYNTAX_CLOSE +
+                        parseSyntaxTree(arguments[Number(syntaxProperties.match || 0)], syntaxProperties.subSyntax || {}) +
+                        HTML_ESCAPE_SYNTAX_END
+                    );
                 }
             );
         }
@@ -47,7 +58,7 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
         var options = cseInstance.options || {};
         var languageData = options.languageData || {};
 
-        var formattedLines = parseSyntaxTree(escapeCode(target.innerText), languageData.syntax || {}).split("\n");
+        var formattedLines = unescapeHtml(parseSyntaxTree(target.innerText, languageData.syntax || {})).split("\n");
 
         var newContents = "";
 

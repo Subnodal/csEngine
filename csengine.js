@@ -68,6 +68,7 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
 
             editorInputElement.setAttribute("cs-part", "editorInput");
             editorInputElement.setAttribute("contenteditable", "true");
+            editorInputElement.setAttribute("spellcheck", "false");
 
             editorSpaceElement.appendChild(editorInputElement);
 

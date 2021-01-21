@@ -17,9 +17,11 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         gutter: "#0b2f68",
         selection: "#4688f2",
         text: "white",
+        definition: "#1ee2ae; font-weight: bold;",
         keyword: "#1ee2ae",
         string: "#1faee2",
-        number: "#a0c5ff"
+        number: "#a0c5ff",
+        atom: "#1faee2"
     };
 
     exports.createStyler = function(cseInstance) {
@@ -74,16 +76,24 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         `, "::selection"));
 
         addStyle(new styler.Style("syntax", `
-            color: ${theme.keyword}
+            color: ${theme.definition};
+        `, "[cs-syntax='definition']"));
+
+        addStyle(new styler.Style("syntax", `
+            color: ${theme.keyword};
         `, "[cs-syntax='keyword']"));
 
         addStyle(new styler.Style("syntax", `
-            color: ${theme.string}
+            color: ${theme.string};
         `, "[cs-syntax='string']"));
 
         addStyle(new styler.Style("syntax", `
-            color: ${theme.number}
+            color: ${theme.number};
         `, "[cs-syntax='number']"));
+
+        addStyle(new styler.Style("syntax", `
+            color: ${theme.atom};
+        `, "[cs-syntax='atom']"));
 
         return newStyler;
     };
