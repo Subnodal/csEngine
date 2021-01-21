@@ -68,7 +68,6 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
         var newSelection = window.getSelection();
 
         newSelection.removeAllRanges();
-        console.log(range);
         newSelection.addRange(range);
     };
 
