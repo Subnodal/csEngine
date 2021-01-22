@@ -56,26 +56,26 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
 
             var styleElement = document.createElement("style");
 
-            styleElement.setAttribute("cs-part", "style");
+            styleElement.setAttribute("cse-part", "style");
 
             var editorSpaceElement = document.createElement("div");
 
-            editorSpaceElement.setAttribute("cs-part", "editorSpace");
+            editorSpaceElement.setAttribute("cse-part", "editorSpace");
 
             var editorGutterElement = document.createElement("div");
 
-            editorGutterElement.setAttribute("cs-part", "editorGutter");
+            editorGutterElement.setAttribute("cse-part", "editorGutter");
             editorSpaceElement.appendChild(editorGutterElement);
 
             var editorInputElement = document.createElement("div");
 
-            editorInputElement.setAttribute("cs-part", "editorInput");
+            editorInputElement.setAttribute("cse-part", "editorInput");
             editorInputElement.setAttribute("contenteditable", "true");
             editorInputElement.setAttribute("spellcheck", "false");
 
             var editorMeasurerElement = document.createElement("div");
 
-            editorMeasurerElement.setAttribute("cs-part", "editorMeasurer");
+            editorMeasurerElement.setAttribute("cse-part", "editorMeasurer");
             editorMeasurerElement.setAttribute("aria-hidden", "true");
 
             editorSpaceElement.appendChild(editorInputElement);
@@ -113,7 +113,7 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
         }
 
         withPart(partName, callback) {
-            var parts = this.rootElement.querySelectorAll(`[cs-part="${partName}"]`);
+            var parts = this.rootElement.querySelectorAll(`[cse-part="${partName}"]`);
 
             for (var i = 0; i < parts.length; i++) {
                 callback(parts[i], i);

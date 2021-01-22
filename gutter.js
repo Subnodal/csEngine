@@ -45,13 +45,13 @@ namespace("com.subnodal.codeslate.engine.gutter", function(exports) {
                 var editorGutterLineElement = null;
                 var isGutterLineNew = false;
 
-                if (editorGutterElement.querySelectorAll(`[cs-part="editorGutterLine"][cs-line="${i}"]`).length > 0) {
-                    editorGutterLineElement = editorGutterElement.querySelectorAll(`[cs-part="editorGutterLine"][cs-line="${i}"]`)[0];
+                if (editorGutterElement.querySelectorAll(`[cse-part="editorGutterLine"][cse-line="${i}"]`).length > 0) {
+                    editorGutterLineElement = editorGutterElement.querySelectorAll(`[cse-part="editorGutterLine"][cse-line="${i}"]`)[0];
                 } else {
                     editorGutterLineElement = document.createElement("div");
                     
-                    editorGutterLineElement.setAttribute("cs-part", "editorGutterLine");
-                    editorGutterLineElement.setAttribute("cs-line", String(i));
+                    editorGutterLineElement.setAttribute("cse-part", "editorGutterLine");
+                    editorGutterLineElement.setAttribute("cse-line", String(i));
 
                     isGutterLineNew = true;
                 }

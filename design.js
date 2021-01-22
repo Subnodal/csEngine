@@ -105,31 +105,31 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
 
         addStyle(new styler.Style("syntax", `
             color: ${theme.definition};
-        `, "[cs-syntax='definition']"));
+        `, "[cse-syntax='definition']"));
 
         addStyle(new styler.Style("syntax", `
             color: ${theme.keyword};
-        `, "[cs-syntax='keyword']"));
+        `, "[cse-syntax='keyword']"));
 
         addStyle(new styler.Style("syntax", `
             color: ${theme.string};
-        `, "[cs-syntax='string']"));
+        `, "[cse-syntax='string']"));
 
         addStyle(new styler.Style("syntax", `
             color: ${theme.number};
-        `, "[cs-syntax='number']"));
+        `, "[cse-syntax='number']"));
 
         addStyle(new styler.Style("syntax", `
             color: ${theme.operator};
-        `, "[cs-syntax='operator']"));
+        `, "[cse-syntax='operator']"));
 
         addStyle(new styler.Style("syntax", `
             color: ${theme.atom};
-        `, "[cs-syntax='atom']"));
+        `, "[cse-syntax='atom']"));
 
         addStyle(new styler.Style("syntax", `
             color: ${theme.comment};
-        `, "[cs-syntax='comment']"));
+        `, "[cse-syntax='comment']"));
 
         return newStyler;
     };

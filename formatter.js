@@ -23,10 +23,10 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
 
     function replaceMarks(code) {
         return code
-            .replace(new RegExp(HTML_ESCAPE_SYNTAX_OPEN, "g"), `<span cs-part="syntax" cs-syntax="`)
+            .replace(new RegExp(HTML_ESCAPE_SYNTAX_OPEN, "g"), `<span cse-part="syntax" cse-syntax="`)
             .replace(new RegExp(HTML_ESCAPE_SYNTAX_CLOSE, "g"), `">`)
             .replace(new RegExp(HTML_ESCAPE_SYNTAX_END, "g"), `</span>`)
-            .replace(new RegExp(HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK, "g"), `<span spellcheck="true" cs-part="syntax" cs-syntax="`)
+            .replace(new RegExp(HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK, "g"), `<span spellcheck="true" cse-part="syntax" cse-syntax="`)
         ;
     }
 

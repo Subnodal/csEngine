@@ -17,7 +17,7 @@ namespace("com.subnodal.codeslate.engine.styler", function(exports) {
             var css = "";
 
             for (var i = 0; i < this.styleCollection.length; i++) {
-                css += `[cs-part="${this.styleCollection[i].part}"]${this.styleCollection[i].specification} {${this.styleCollection[i].rules}}`;
+                css += `[cse-part="${this.styleCollection[i].part}"]${this.styleCollection[i].specification} {${this.styleCollection[i].rules}}`;
             }
 
             return css;
