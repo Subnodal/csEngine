@@ -34,23 +34,18 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
         for (var i = 0; i < syntax.length; i++) {
             var syntaxProperties = syntax[i];
 
-            try {
-                code = code.replace(
-                    new RegExp(syntaxProperties.regex || "", "g" + (syntaxProperties.flags || "")),
-                    function() {
-                        return (
-                            (syntaxProperties.spellcheck ? HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK : HTML_ESCAPE_SYNTAX_OPEN) +
-                            (syntaxProperties.type || "") +
-                            HTML_ESCAPE_SYNTAX_CLOSE +
-                            parseSyntaxTree(arguments[Number(syntaxProperties.match || 0)], syntaxProperties.subSyntax || {}) +
-                            HTML_ESCAPE_SYNTAX_END
-                        );
-                    }
-                );
-            } catch (e) {
-                console.error(e);
-                console.log(syntaxProperties.regex);
-            }
+            code = code.replace(
+                new RegExp(syntaxProperties.regex || "", "g" + (syntaxProperties.flags || "")),
+                function() {
+                    return (
+                        (syntaxProperties.spellcheck ? HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK : HTML_ESCAPE_SYNTAX_OPEN) +
+                        (syntaxProperties.type || "") +
+                        HTML_ESCAPE_SYNTAX_CLOSE +
+                        parseSyntaxTree(arguments[Number(syntaxProperties.match || 0)], syntaxProperties.subSyntax || {}) +
+                        HTML_ESCAPE_SYNTAX_END
+                    );
+                }
+            );
         }
 
         return code;
