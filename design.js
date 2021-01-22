@@ -44,6 +44,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             width: 100%;
             height: 100%;
             background-color: ${theme.background};
+            font-size: 16px;
             font-family: ${theme.uiFont};
             overflow: hidden;
         `));
@@ -80,6 +81,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             padding-bottom: 2em;
             padding-left: 0.2em;
             font-family: ${theme.codeFont};
+            line-height: 20px;
             color: ${theme.text};
             overflow: auto;
             white-space: ${options.wordWrap ? "pre-wrap" : "pre"};
@@ -100,6 +102,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             width: calc(100% - 3.2em);
             padding-left: 0.2em;
             font-family: ${theme.codeFont};
+            line-height: 20px;
             color: ${theme.text};
             overflow: auto;
             white-space: ${options.wordWrap ? "pre-wrap" : "pre"};
