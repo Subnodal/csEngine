@@ -17,7 +17,7 @@ namespace("com.subnodal.codeslate.engine.gutter", function(exports) {
         var lineCountChanged = false;
 
         if (lastMeasurement == null || remeasureLines) {
-            lastMeasurement = measurer.getLineTopDistances(cseInstance, from, to, lastMeasurement || []);
+            lastMeasurement = measurer.getLineTopDistances(cseInstance, from, to);
 
             if (lastLineCount != lastMeasurement.length) {
                 lineCountChanged = true;

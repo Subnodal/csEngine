@@ -86,7 +86,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
             }
 
             var caretTop = window.getSelection().getRangeAt(0).getBoundingClientRect().top + editorInputElement.scrollTop;
-            var lineTopDistances = measurer.getLineTopDistances(cseInstance);
+            var lineTopDistances = measurer.getLineTopDistances(cseInstance, (roughCurrentLinePosition || 0) - 50, (roughCurrentLinePosition || 0) + 50);
 
             for (var i = 0; i < lineTopDistances.length; i++) {
                 if (i == lineTopDistances.length - 1 || caretTop < lineTopDistances[i + 1]) {

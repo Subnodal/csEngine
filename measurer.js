@@ -14,9 +14,12 @@ namespace("com.subnodal.codeslate.engine.measurer", function(exports) {
         their respective lines.
     */
 
-    exports.getLineTopDistances = function(cseInstance) {
+    exports.getLineTopDistances = function(cseInstance, from = 0, to = null) {
         var editorMeasurerElement = null;
-        var lineTopDistances = [];
+
+        from = Math.max(from, 0);
+
+        var lineTopDistances = new Array(from).fill(0);
 
         cseInstance.withPart("editorMeasurer", function(element) {
             editorMeasurerElement = element;
@@ -25,10 +28,14 @@ namespace("com.subnodal.codeslate.engine.measurer", function(exports) {
         cseInstance.withPart("editorInput", function(editorInputElement) {
             var linesToInsert = editorInputElement.innerHTML.split("\n");
 
-            editorMeasurerElement.innerHTML = "";
+            if (to == null) {
+                to = linesToInsert.length;
+            }
+
+            editorMeasurerElement.innerHTML = linesToInsert.slice(0, from).join("\n");
             editorMeasurerElement.style.width = editorInputElement.clientWidth;
 
-            for (var i = 0; i < linesToInsert.length; i++) {
+            for (var i = from; i < to; i++) {
                 lineTopDistances.push(editorMeasurerElement.clientHeight);
 
                 editorMeasurerElement.innerHTML += linesToInsert[i] + "\n";
