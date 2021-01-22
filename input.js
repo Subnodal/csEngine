@@ -170,7 +170,6 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
             editorInputElement.addEventListener("keyup", function(event) {
                 var selection = exports.saveSelection(editorInputElement);
 
-                // TODO: Add tab size configurability
                 if (event.keyCode == 9) { // Tab
                     lastLineTopDistances = null;
                     roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
@@ -192,19 +191,19 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
                     for (var i = 0; i < lastTabbedLines.length; i++) {
                         var line = lastTabbedLines[i];
-                        var indentationLevel = Math.floor(lines[line].search(/\S|$/) / 4);
-                        var spacesToNextIndentation = 4 - (lines[line].search(/\S|$/) % 4);
+                        var indentationLevel = Math.floor(lines[line].search(/\S|$/) / (cseInstance.options.indentBy || 4));
+                        var spacesToNextIndentation = (cseInstance.options.indentBy || 4) - (lines[line].search(/\S|$/) % (cseInstance.options.indentBy || 4));
 
                         if (!event.shiftKey) {
-                            lines[line] = " ".repeat(spacesToNextIndentation) + lines[line];
+                            lines[line] = (cseInstance.options.indentWithTab ? "\t" : " ").repeat(spacesToNextIndentation) + lines[line];
                             spacesToIncrement += spacesToNextIndentation;
                         } else {
                             if (lines[line].search(/\S|$/) > 0) {
                                 spacesToIncrement -= spacesToNextIndentation;
                             }
 
-                            if ((indentationLevel) * 4 > 0) {
-                                lines[line] = " ".repeat((indentationLevel - 1) * 4) + lines[line].trimStart();
+                            if (indentationLevel * (cseInstance.options.indentBy || 4) > 0) {
+                                lines[line] = (cseInstance.options.indentWithTab ? "\t" : " ").repeat((indentationLevel - 1) * (cseInstance.options.indentBy || 4)) + lines[line].trimStart();
                             }
                         }
                     }

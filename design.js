@@ -84,6 +84,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             overflow: auto;
             white-space: ${options.wordWrap ? "pre-wrap" : "pre"};
             word-break: ${options.wordWrap ? "break-all" : "keep-all"};
+            tab-size: ${options.tabWidth || 8};
             outline: none;
             caret-color: ${theme.caret};
         `));
