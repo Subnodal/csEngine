@@ -57,7 +57,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                     foundStart = true;
                 }
 
-                if (foundStart && selection.end >= index && selection.end < index) {
+                if (foundStart && selection.end >= index && selection.end <= index) {
                     range.setEnd(element, selection.end - index);
 
                     shouldStop = true;
@@ -159,6 +159,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
             editorInputElement.addEventListener("click", function(event) {
                 roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+                lastScrollSegment = 0;
 
                 renderScrollChange();
             });
@@ -169,6 +170,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                 // TODO: Add tab size configurability
                 // TODO: Add ability to select multiple lines to indent
                 if (event.keyCode == 9) { // Tab
+                    lastLineTopDistances = null;
                     roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
 
                     var lines = editorInputElement.innerHTML.split("\n");
@@ -219,21 +221,23 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                 }
 
                 if (
-                    event.keyCode == 37 ||
-                    event.keyCode == 39 ||
-                    event.keyCode == 8 ||
                     event.keyCode == 33 ||
-                    event.keyCode == 34 ||
-                    event.keyCode == 35 ||
-                    event.keyCode == 36
-                ) { // Left, Right, Backspace, PgUp, PgDn, Home, End
+                    event.keyCode == 34
+                ) { // PgUp, PgDn
                     roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+                }
+
+                if (event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 8) { // Left, Right, Backspace
+                    if (window.getSelection().getRangeAt(0).getBoundingClientRect().left - editorInputElement.offsetLeft < 10) {
+                        roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+                    }
                 }
             });
 
             editorInputElement.addEventListener("paste", function(event) {
                 setTimeout(function() {
                     lastLineTopDistances = null;
+                    lastScrollSegment = 0;
 
                     renderScrollChange();
                 }, 1000);

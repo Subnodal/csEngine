@@ -72,7 +72,6 @@ namespace("com.subnodal.codeslate.engine.gutter", function(exports) {
                     editorInputElement.style.left = gutterLineWidth - 3 + "px";
 
                     editorInputElement.style.width = `calc(100% - ${gutterLineWidth}px)`;
-                    editorMeasurerElement.style.width = `calc(100% - ${gutterLineWidth}px)`;
                 }
             }
         });

@@ -33,7 +33,7 @@ namespace("com.subnodal.codeslate.engine.measurer", function(exports) {
             }
 
             editorMeasurerElement.innerHTML = linesToInsert.slice(0, from).join("\n");
-            editorMeasurerElement.style.width = editorInputElement.clientWidth;
+            editorMeasurerElement.style.width = editorInputElement.clientWidth - (editorInputElement.offsetWidth - editorInputElement.clientWidth) + 10 + "px";
 
             for (var i = from; i < to; i++) {
                 lineTopDistances.push(editorMeasurerElement.clientHeight);

@@ -75,7 +75,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             font-family: ${theme.codeFont};
             color: ${theme.text};
             overflow: auto;
-            white-space: pre;
+            white-space: ${options.wordWrap ? "pre-wrap" : "pre"};
             word-break: ${options.wordWrap ? "break-all" : "keep-all"};
             outline: none;
             caret-color: ${theme.caret};
@@ -94,7 +94,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             font-family: ${theme.codeFont};
             color: ${theme.text};
             overflow: auto;
-            white-space: pre;
+            white-space: ${options.wordWrap ? "pre-wrap" : "pre"};
             word-break: ${options.wordWrap ? "break-all" : "keep-all"};
             visibility: hidden;
         `));

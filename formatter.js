@@ -11,7 +11,7 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
     const HTML_ESCAPE_SYNTAX_OPEN = "\x02"; // STX
     const HTML_ESCAPE_SYNTAX_CLOSE = "\x03"; // ETX
     const HTML_ESCAPE_SYNTAX_END = "\x04"; // EOT
-    const HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK = "\x05"; // ENQ
+    const HTML_ESCAPE_SYNTAX_CLOSE_SPELLCHECK = "\x05"; // ENQ
 
     function escapeHtml(code) {
         return code
@@ -26,7 +26,7 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
             .replace(new RegExp(HTML_ESCAPE_SYNTAX_OPEN, "g"), `<span cse-part="syntax" cse-syntax="`)
             .replace(new RegExp(HTML_ESCAPE_SYNTAX_CLOSE, "g"), `">`)
             .replace(new RegExp(HTML_ESCAPE_SYNTAX_END, "g"), `</span>`)
-            .replace(new RegExp(HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK, "g"), `<span spellcheck="true" cse-part="syntax" cse-syntax="`)
+            .replace(new RegExp(HTML_ESCAPE_SYNTAX_CLOSE_SPELLCHECK, "g"), `" spellcheck="true">`)
         ;
     }
 
@@ -35,13 +35,19 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
             var syntaxProperties = syntax[i];
 
             code = code.replace(
-                new RegExp(syntaxProperties.regex || "", "g" + (syntaxProperties.flags || "")),
+                new RegExp(`(?<!${HTML_ESCAPE_SYNTAX_OPEN})(?:` + (syntaxProperties.regex || "") + `)` + (
+                    `(?![^` +
+                    `${HTML_ESCAPE_SYNTAX_OPEN}` +
+                    `]*${HTML_ESCAPE_SYNTAX_END})`
+                ), "g" + (syntaxProperties.flags || "")),
                 function() {
                     return (
-                        (syntaxProperties.spellcheck ? HTML_ESCAPE_SYNTAX_OPEN_SPELLCHECK : HTML_ESCAPE_SYNTAX_OPEN) +
+                        HTML_ESCAPE_SYNTAX_OPEN +
                         (syntaxProperties.type || "") +
-                        HTML_ESCAPE_SYNTAX_CLOSE +
+                        (syntaxProperties.spellcheck ? HTML_ESCAPE_SYNTAX_CLOSE_SPELLCHECK : HTML_ESCAPE_SYNTAX_CLOSE) +
+                        (syntaxProperties.before || "") +
                         parseSyntaxTree(arguments[Number(syntaxProperties.match || 0)], syntaxProperties.subSyntax || {}) +
+                        (syntaxProperties.after || "") +
                         HTML_ESCAPE_SYNTAX_END
                     );
                 }
