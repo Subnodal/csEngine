@@ -146,7 +146,19 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                 }
 
                 if (event.keyCode == 13) { // Enter
-                    document.execCommand("insertHTML", false, "\n");
+                    lastLineTopDistances = null;
+                    roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+                    
+                    var lastLine = editorInputElement.innerHTML.split("\n")[roughCurrentLinePosition];
+                    var indentationChange = 0;
+
+                    if (((cseInstance.options.languageData || {}).indentOpenChars || []).includes(lastLine[lastLine.length - 1])) {
+                        indentationChange++;
+                    }
+
+                    document.execCommand("insertHTML", false, "\n" + (
+                        (cseInstance.options.indentWithTab ? "\t" : " ").repeat(lastLine.search(/\S|$/) + (indentationChange * (cseInstance.options.indentBy || 4)))
+                    ));
 
                     event.preventDefault();
                 }
