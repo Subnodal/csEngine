@@ -16,6 +16,7 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         background: "#072047",
         gutter: "#0b2f68",
         lineNumber: "#98b4e0",
+        lineNumberIndent: "white",
         caret: "#dbe21e",
         selection: "#4688f2",
         text: "white",
@@ -61,7 +62,13 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
             position: absolute;
             right: 0.5em;
             color: ${theme.lineNumber};
+            user-select: none;
         `));
+
+        addStyle(new styler.Style("editorGutterLine", `
+            color: ${theme.lineNumberIndent};
+            font-weight: bold;
+        `, `[cse-indentmarker="true"]`));
 
         addStyle(new styler.Style("editorInput", `
             position: relative;

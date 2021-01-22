@@ -15,6 +15,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
     var lastLineTopDistances = null;
     var roughCurrentLinePosition = null;
     var lastScrollSegment = 0;
+    var lastTabbedLines = [];
 
     exports.Selection = class {
         constructor(start, end) {
@@ -160,42 +161,74 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
             editorInputElement.addEventListener("click", function(event) {
                 roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
                 lastScrollSegment = 0;
+                lastTabbedLines = [];
 
                 renderScrollChange();
+                gutter.setIndentMarkers(lastTabbedLines);
             });
 
             editorInputElement.addEventListener("keyup", function(event) {
                 var selection = exports.saveSelection(editorInputElement);
 
                 // TODO: Add tab size configurability
-                // TODO: Add ability to select multiple lines to indent
                 if (event.keyCode == 9) { // Tab
                     lastLineTopDistances = null;
                     roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
 
-                    var lines = editorInputElement.innerHTML.split("\n");
-                    var indentationLevel = Math.floor(lines[roughCurrentLinePosition].search(/\S|$/) / 4);
-                    var spacesToNextIndentation = 4 - (lines[roughCurrentLinePosition].search(/\S|$/) % 4);
-
-                    if (!event.shiftKey) {
-                        lines[roughCurrentLinePosition] = " ".repeat(spacesToNextIndentation) + lines[roughCurrentLinePosition];
-                        editorInputElement.innerHTML = lines.join("\n");
-
-                        selection.start += spacesToNextIndentation;
-                        selection.end += spacesToNextIndentation;
-                    } else {
-                        selection.start -= Math.max(spacesToNextIndentation, 0);
-                        selection.end -= Math.max(spacesToNextIndentation, 0);
-
-                        lines[roughCurrentLinePosition] = " ".repeat((indentationLevel - 1) * 4) + lines[roughCurrentLinePosition].trimStart();
-                        editorInputElement.innerHTML = lines.join("\n");
-                    }
-
-                    event.preventDefault();
+                    selection.start = selection.end;
 
                     exports.restoreSelection(editorInputElement, selection);
 
-                    roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+                    lastLineTopDistances = null;
+
+                    var lines = editorInputElement.innerHTML.split("\n");
+                    var spacesToIncrement = 0;
+
+                    if (lastTabbedLines.length == 0) {
+                        for (var i = roughCurrentLinePosition; i <= exports.getCurrentLinePosition(cseInstance); i++) {
+                            lastTabbedLines.push(i);
+                        }
+                    }
+
+                    for (var i = 0; i < lastTabbedLines.length; i++) {
+                        var line = lastTabbedLines[i];
+                        var indentationLevel = Math.floor(lines[line].search(/\S|$/) / 4);
+                        var spacesToNextIndentation = 4 - (lines[line].search(/\S|$/) % 4);
+
+                        if (!event.shiftKey) {
+                            lines[line] = " ".repeat(spacesToNextIndentation) + lines[line];
+                            spacesToIncrement += spacesToNextIndentation;
+                        } else {
+                            if (lines[line].search(/\S|$/) > 0) {
+                                spacesToIncrement -= spacesToNextIndentation;
+                            }
+
+                            if ((indentationLevel) * 4 > 0) {
+                                lines[line] = " ".repeat((indentationLevel - 1) * 4) + lines[line].trimStart();
+                            }
+                        }
+                    }
+
+                    editorInputElement.innerHTML = lines.join("\n");
+
+                    selection.end += spacesToIncrement;
+                    selection.start = selection.end;
+
+                    exports.restoreSelection(editorInputElement, selection);
+
+                    event.preventDefault();
+
+                    gutter.setIndentMarkers(lastTabbedLines);
+                } else if (event.keyCode != 16) { // Shift
+                    lastTabbedLines = [];
+
+                    gutter.setIndentMarkers(lastTabbedLines);
+                }
+
+                if (event.keyCode == 8) { // Backspace
+                    if (editorInputElement.innerHTML == "") {
+                        editorInputElement.innerHTML = "\n";
+                    }
                 }
 
                 if (cseInstance.render(Math.max(roughCurrentLinePosition - 50, 0), roughCurrentLinePosition + 50)) {
@@ -238,8 +271,11 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                 setTimeout(function() {
                     lastLineTopDistances = null;
                     lastScrollSegment = 0;
+                    lastTabbedLines = [];
 
                     renderScrollChange();
+
+                    gutter.setIndentMarkers(lastTabbedLines);
                 }, 1000);
             });
 

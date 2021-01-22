@@ -76,4 +76,21 @@ namespace("com.subnodal.codeslate.engine.gutter", function(exports) {
             }
         });
     };
+
+    exports.setIndentMarkers = function(lines) {
+        cseInstance.withPart("editorGutter", function(editorGutterElement) {
+            var allEditorGutterElements = editorGutterElement.querySelectorAll(`[cse-part="editorGutterLine"]`);
+
+            for (var i = 0; i < allEditorGutterElements.length; i++) {
+                allEditorGutterElements[i].removeAttribute("cse-indentmarker");
+            }
+
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                var editorGutterLineElement = editorGutterElement.querySelectorAll(`[cse-part="editorGutterLine"][cse-line="${line}"]`)[0];
+
+                editorGutterLineElement.setAttribute("cse-indentmarker", "true");
+            }
+        });
+    };
 });
