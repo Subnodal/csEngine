@@ -12,7 +12,9 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
     var gutter = require("com.subnodal.codeslate.engine.gutter");
 
     var gutterRenderTimeout = null;
+    var lastLineTopDistances = null;
     var roughCurrentLinePosition = null;
+    var lastScrollSegment = 0;
 
     exports.Selection = class {
         constructor(start, end) {
@@ -86,10 +88,13 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
             }
 
             var caretTop = window.getSelection().getRangeAt(0).getBoundingClientRect().top + editorInputElement.scrollTop;
-            var lineTopDistances = measurer.getLineTopDistances(cseInstance, (roughCurrentLinePosition || 0) - 50, (roughCurrentLinePosition || 0) + 50);
 
-            for (var i = 0; i < lineTopDistances.length; i++) {
-                if (i == lineTopDistances.length - 1 || caretTop < lineTopDistances[i + 1]) {
+            if (lastLineTopDistances == null) {
+                lastLineTopDistances = measurer.getLineTopDistances(cseInstance, (roughCurrentLinePosition || 0) - 50, (roughCurrentLinePosition || 0) + 50);
+            }
+
+            for (var i = 0; i < lastLineTopDistances.length; i++) {
+                if (i == lastLineTopDistances.length - 1 || caretTop < lastLineTopDistances[i + 1]) {
                     linePosition = i;
 
                     break;
@@ -103,6 +108,36 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
     exports.register = function(cseInstance) {
         cseInstance.withPart("editorInput", function(editorInputElement) {
             roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+
+            function renderScrollChange() {
+                var selection = exports.saveSelection(editorInputElement);
+
+                gutter.render(cseInstance);
+
+                if (lastLineTopDistances == null) {
+                    lastLineTopDistances = measurer.getLineTopDistances(cseInstance);
+                }
+
+                var currentFirstLine = 0;
+
+                for (var i = 0; i < lastLineTopDistances.length; i++) {
+                    if (lastLineTopDistances[currentFirstLine + 1] > editorInputElement.scrollTop) {
+                        break;
+                    }
+
+                    currentFirstLine++;
+                }
+
+                if (Math.abs(currentFirstLine - lastScrollSegment) < 25) {
+                    return;
+                }
+
+                lastScrollSegment = currentFirstLine;
+
+                if (cseInstance.render(Math.max(currentFirstLine - 50, 0), currentFirstLine + 100)) {
+                    exports.restoreSelection(editorInputElement, selection);
+                }
+            }
 
             editorInputElement.addEventListener("keydown", function(event) {
                 if (event.keyCode == 9) { // Tab
@@ -124,6 +159,8 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
             editorInputElement.addEventListener("click", function(event) {
                 roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+
+                renderScrollChange();
             });
 
             editorInputElement.addEventListener("keyup", function(event) {
@@ -132,6 +169,8 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                 // TODO: Add tab size configurability
                 // TODO: Add ability to select multiple lines to indent
                 if (event.keyCode == 9) { // Tab
+                    roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
+
                     var lines = editorInputElement.innerHTML.split("\n");
                     var indentationLevel = Math.floor(lines[roughCurrentLinePosition].search(/\S|$/) / 4);
                     var spacesToNextIndentation = 4 - (lines[roughCurrentLinePosition].search(/\S|$/) % 4);
@@ -159,6 +198,8 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
                 if (cseInstance.render(Math.max(roughCurrentLinePosition - 50, 0), roughCurrentLinePosition + 50)) {
                     exports.restoreSelection(editorInputElement, selection);
+
+                    lastLineTopDistances = null;
                 }
 
                 if (gutterRenderTimeout != null) {
@@ -192,29 +233,13 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
             editorInputElement.addEventListener("paste", function(event) {
                 setTimeout(function() {
-                    for (var i = 0; i < editorInputElement.innerText.split("\n").length; i += 10) {
-                        (function(i) {
-                            setTimeout(function() {
-                                var selection = exports.saveSelection(editorInputElement);
-        
-                                if (cseInstance.render(i, i + 10)) {
-                                    exports.restoreSelection(editorInputElement, selection);
-                                }
+                    lastLineTopDistances = null;
 
-                                gutter.render(cseInstance, true);
-                            }, i * 5);
-                        })(i);
-                    }
-    
-                    if (gutterRenderTimeout != null) {
-                        clearTimeout(gutterRenderTimeout);
-                    }
-                    }, 1000);
+                    renderScrollChange();
+                }, 1000);
             });
 
-            editorInputElement.addEventListener("scroll", function(event) {
-                gutter.render(cseInstance);
-            });
+            editorInputElement.addEventListener("scroll", renderScrollChange);
         });
     };
 });
