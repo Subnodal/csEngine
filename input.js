@@ -27,6 +27,10 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
     // `saveSelection` and `restoreSelection` based off of https://stackoverflow.com/a/13950376
 
     exports.saveSelection = function(inputElement) {
+        if (window.getSelection().rangeCount == 0) {
+            return new exports.Selection(0, 0);
+        }
+
         var range = window.getSelection().getRangeAt(0);
         var startRange = range.cloneRange();
 
@@ -84,23 +88,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
         var linePosition = 0;
 
         cseInstance.withPart("editorInput", function(editorInputElement) {
-            if (window.getSelection().rangeCount == 0) {
-                return;
-            }
-
-            var caretTop = window.getSelection().getRangeAt(0).getBoundingClientRect().top + editorInputElement.scrollTop;
-
-            if (lastLineTopDistances == null) {
-                lastLineTopDistances = measurer.getLineTopDistances(cseInstance, (roughCurrentLinePosition || 0) - 50, (roughCurrentLinePosition || 0) + 50);
-            }
-
-            for (var i = 0; i < lastLineTopDistances.length; i++) {
-                if (i == lastLineTopDistances.length - 1 || caretTop < lastLineTopDistances[i + 1]) {
-                    linePosition = i;
-
-                    break;
-                }
-            }
+            linePosition = editorInputElement.innerText.substring(0, exports.saveSelection(editorInputElement).start).split("\n").length - 1;
         });
 
         return linePosition;
@@ -160,6 +148,10 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                         (cseInstance.options.indentWithTab ? "\t" : " ").repeat(lastLine.search(/\S|$/) + (indentationChange * (cseInstance.options.indentBy || 4)))
                     ));
 
+                    event.preventDefault();
+                }
+
+                if (event.keyCode == 8 && editorInputElement.innerHTML == "\n") { // Backspace
                     event.preventDefault();
                 }
 
@@ -238,10 +230,6 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                     lastTabbedLines = [];
 
                     gutter.setIndentMarkers(lastTabbedLines);
-                } else if (event.keyCode == 8) { // Backspace
-                    if (editorInputElement.innerHTML == "") {
-                        editorInputElement.innerHTML = "\n";
-                    }
                 } else {
                     var indentCloseChars = (cseInstance.options.languageData || {}).indentCloseChars || [];
                     var lines = editorInputElement.innerHTML.split("\n");
