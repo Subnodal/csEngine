@@ -13,11 +13,11 @@ namespace("com.subnodal.codeslate.engine.styler", function(exports) {
             this.styleCollection = styleCollection;
         }
 
-        generate() {
+        generate(cseInstance) {
             var css = "";
 
             for (var i = 0; i < this.styleCollection.length; i++) {
-                css += `[cse-part="${this.styleCollection[i].part}"]${this.styleCollection[i].specification} {${this.styleCollection[i].rules}}`;
+                css += `[cse-id="${cseInstance.id}"] [cse-part="${this.styleCollection[i].part}"]${this.styleCollection[i].specification} {${this.styleCollection[i].rules}}`;
             }
 
             return css;

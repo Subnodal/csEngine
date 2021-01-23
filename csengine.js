@@ -18,6 +18,14 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             this.rootElement = rootElement;
             this.options = options;
 
+            this.id = "";
+
+            var randomIdDigits = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+
+            for (var i = 0; i < 16; i++) {
+                this.id += randomIdDigits.charAt(Math.floor(Math.random() * randomIdDigits.length));
+            }
+
             var codeToInject = rootElement.innerHTML;
 
             this.rootElement.innerHTML = "";
@@ -84,6 +92,8 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             this.rootElement.appendChild(styleElement);
             this.rootElement.appendChild(editorSpaceElement);
 
+            this.rootElement.setAttribute("cse-id", this.id);
+
             input.register(this);
 
             this.render();
@@ -102,7 +112,7 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             }
 
             this.withPart("style", function(styleElement) {
-                styleElement.innerHTML = design.createStyler(thisScope).generate();
+                styleElement.innerHTML = design.createStyler(thisScope).generate(thisScope);
             });
 
             this.withPart("editorInput", function(editorInputElement) {
@@ -113,7 +123,7 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
         }
 
         withPart(partName, callback) {
-            var parts = this.rootElement.querySelectorAll(`[cse-part="${partName}"]`);
+            var parts = this.rootElement.querySelectorAll(`[cse-id="${this.id}"] [cse-part="${partName}"]`);
 
             for (var i = 0; i < parts.length; i++) {
                 callback(parts[i], i);
