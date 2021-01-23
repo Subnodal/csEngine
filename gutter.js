@@ -69,9 +69,9 @@ namespace("com.subnodal.codeslate.engine.gutter", function(exports) {
                     gutterLineWidth = Math.max(gutterLineWidth, parseInt(getComputedStyle(editorGutterLineElement).fontSize) * 3);
 
                     editorGutterElement.style.width = gutterLineWidth + "px";
-                    editorInputElement.style.left = gutterLineWidth - 3 + "px";
+                    editorInputElement.style.left = gutterLineWidth + "px";
 
-                    editorInputElement.style.width = `calc(100% - ${gutterLineWidth}px)`;
+                    editorInputElement.style.width = `calc(100% - ${gutterLineWidth + 3}px)`;
                 }
             }
         });

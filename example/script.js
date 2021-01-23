@@ -23,7 +23,8 @@ window.onload = function() {
                 {type: "atom", regex: `\\b(true|false|null|undefined|NaN|Infinity)\\b`},
                 {type: "operator", regex: `(\\+\\+|--|\\+|-|\\*|\\/|%|===|==|!==|!=|\\+=|-=|\\*=|\\/=|%=|=|<<|>>|<=|>=|<|>|&&|\\|\\||!|&|\\||~|\\^)`}
             ],
-            indentOpenChars: ["(", "{"]
+            indentOpenChars: ["(", "{", "["],
+            indentCloseChars: [")", "}", "]"]
         }
     });
 };
