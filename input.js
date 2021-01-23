@@ -182,6 +182,10 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
             editorInputElement.addEventListener("keyup", function(event) {
                 var selection = exports.saveSelection(editorInputElement);
 
+                if (event.keyCode == 65 && event.ctrlKey || event.keyCode == 17) { // Ctrl + A, Ctrl
+                    return; // Prevent Ctrl + A from being cancelled by render updates
+                }
+
                 if (event.keyCode == 9) { // Tab
                     lastLineTopDistances = null;
                     roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
