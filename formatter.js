@@ -46,7 +46,7 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
                         (syntaxProperties.type || "") +
                         (syntaxProperties.spellcheck ? HTML_ESCAPE_SYNTAX_CLOSE_SPELLCHECK : HTML_ESCAPE_SYNTAX_CLOSE) +
                         (syntaxProperties.before || "") +
-                        parseSyntaxTree(arguments[Number(syntaxProperties.match || 0)], syntaxProperties.subSyntax || {}) +
+                        arguments[Number(syntaxProperties.match || 0)] +
                         (syntaxProperties.after || "") +
                         HTML_ESCAPE_SYNTAX_END
                     );

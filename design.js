@@ -26,7 +26,8 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         number: "#a0c5ff",
         operator: "#448dff",
         atom: "#1faee2",
-        comment: "#536889; font-style: italic;"
+        comment: "#536889; font-style: italic;",
+        regex: "#1faee2"
     };
 
     exports.createStyler = function(cseInstance) {
@@ -141,6 +142,10 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         addStyle(new styler.Style("syntax", `
             color: ${theme.comment};
         `, "[cse-syntax='comment']"));
+
+        addStyle(new styler.Style("syntax", `
+            color: ${theme.regex};
+        `, "[cse-syntax='regex']"));
 
         return newStyler;
     };
