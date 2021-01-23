@@ -234,34 +234,32 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                     lastTabbedLines = [];
 
                     gutter.setIndentMarkers(lastTabbedLines);
-                }
-
-                if (event.keyCode == 8) { // Backspace
+                } else if (event.keyCode == 8) { // Backspace
                     if (editorInputElement.innerHTML == "") {
                         editorInputElement.innerHTML = "\n";
                     }
-                }
+                } else {
+                    var indentCloseChars = (cseInstance.options.languageData || {}).indentCloseChars || [];
+                    var lines = editorInputElement.innerHTML.split("\n");
+                    var unindentMade = false;
+                    
+                    for (var i = 0; i < indentCloseChars.length; i++) {
+                        if (lines[roughCurrentLinePosition].match(new RegExp(`^\\s*?\\${indentCloseChars[i]}$`))) {
+                            selection.start -= Math.min(lines[roughCurrentLinePosition].search(/\S|$/), cseInstance.options.indentBy || 4);
+                            selection.end -= Math.min(lines[roughCurrentLinePosition].search(/\S|$/), cseInstance.options.indentBy || 4);
 
-                var indentCloseChars = (cseInstance.options.languageData || {}).indentCloseChars || [];
-                var lines = editorInputElement.innerHTML.split("\n");
-                var unindentMade = false;
-                
-                for (var i = 0; i < indentCloseChars.length; i++) {
-                    if (lines[roughCurrentLinePosition].match(new RegExp(`^\\s*?\\${indentCloseChars[i]}$`))) {
-                        selection.start -= Math.min(lines[roughCurrentLinePosition].search(/\S|$/), cseInstance.options.indentBy || 4);
-                        selection.end -= Math.min(lines[roughCurrentLinePosition].search(/\S|$/), cseInstance.options.indentBy || 4);
+                            lines[roughCurrentLinePosition] = lines[roughCurrentLinePosition].replace(new RegExp(`^\\s{0,${cseInstance.options.indentBy || 4}}`), "");
+                            unindentMade = true;
 
-                        lines[roughCurrentLinePosition] = lines[roughCurrentLinePosition].replace(new RegExp(`^\\s{0,${cseInstance.options.indentBy || 4}}`), "");
-                        unindentMade = true;
-
-                        break;
+                            break;
+                        }
                     }
-                }
 
-                if (unindentMade) {
-                    editorInputElement.innerHTML = lines.join("\n");
+                    if (unindentMade) {
+                        editorInputElement.innerHTML = lines.join("\n");
 
-                    exports.restoreSelection(editorInputElement, selection);
+                        exports.restoreSelection(editorInputElement, selection);
+                    }
                 }
 
                 if (cseInstance.render(Math.max(roughCurrentLinePosition - 50, 0), roughCurrentLinePosition + 50)) {
