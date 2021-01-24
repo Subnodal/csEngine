@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+    This demo file is used to testdrive Codeslate Engine online. For active
+    development, serve index.html to test your changes.
+-->
+<html>
+    <head>
+        <title>Codeslate Engine Example</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.subnodal.com/lib/submodules.min.js"></script>
+        <script src="https://cdn.subnodal.com/lib/csengine.min.js"></script>
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <div id="injectionParent">class Codeslate {
+    constructor(editor = codeslate.EDITOR) {
+        this.isCool = true;
+        this.dependencies = 0;
+    }
+
+    demo() {
+        if (this.isCool) {
+            console.log("Welcome to the Codeslate Engine demo!");
+            // Play around with this code to see what you can do
+            // with Codeslate Engine.
+        }
+    }
+}</div>
+    </body>
+</html>
