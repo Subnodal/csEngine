@@ -92,6 +92,7 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             this.rootElement.appendChild(styleElement);
             this.rootElement.appendChild(editorSpaceElement);
 
+            this.rootElement.setAttribute("dir", "ltr");
             this.rootElement.setAttribute("cse-id", this.id);
 
             input.register(this);
