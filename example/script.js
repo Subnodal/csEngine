@@ -5,6 +5,7 @@ var cseInstance;
 window.onload = function() {
     // Some Regex syntax from https://github.com/atom/language-javascript/blob/master/grammars/javascript.cson
     cseInstance = new csengine.CodeslateEngine(document.getElementById("injectionParent"), {
+        wordWrap: true,
         languageData: {
             syntax: [
                 {type: "comment", regex: `(?<=^(?:[\x03\x05].*?\x04)*[^\x03\x04\x05\n]*)(\\/\\/.*?)\\n`, flags: "m"},
@@ -12,7 +13,7 @@ window.onload = function() {
                 {type: "string", regex: `(?<!\\/\\*)'(?![^\\/]*\\*\\/)(?:[^'\\\\]|\\\\.)*'`, spellcheck: true},
                 {type: "string", regex: `(?<!\\/\\*)\`(?![^\\/]*\\*\\/)(?:[^\`\\\\]|\\\\.)*\``, spellcheck: true, flags: "s"},
                 {type: "comment", regex: `\\/\\*.*?\\*\\/`, flags: "s"},
-                {type: "regex", regex: `(?<!\\/\\*)\\/(?![^\\/]*\\*\\/)(?:[^\\/\\\\\x04]|\\\\.)*?\\/`},
+                {type: "regex", regex: `(?<!\\/\\*)(?<=[\\(\\[\\!\\?\\:\\|])\\s*\\/(?![^\\/]*\\*\\/)(?:[^\\/\\\\\x04\\n]|\\\\.)*?\\/`},
                 {type: "definition", regex: `\\b(function|var|const|let|class|async|await|=>)\\b`},
                 {type: "keyword", regex: `\\b(if|else|for|in|do|while|try|catch|finally|break|continue|return|with|yield|new|typeof|instanceof|delete|import|export)\\b`},
                 {type: "number", regex: `\\b(?<!\\$)0(x|X)[0-9a-fA-F]+n?\\b(?!\\$)`}, // Hex

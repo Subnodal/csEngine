@@ -14,6 +14,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
     var gutterRenderTimeout = null;
     var lastLineTopDistances = null;
     var roughCurrentLinePosition = null;
+    var lastScrollTop = 0;
     var lastScrollSegment = 0;
     var lastTabbedLines = [];
 
@@ -98,7 +99,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
         cseInstance.withPart("editorInput", function(editorInputElement) {
             roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
 
-            function renderScrollChange() {
+            function renderScrollChange(scrollingUpwards = false) {
                 var selection = exports.saveSelection(editorInputElement);
 
                 gutter.render(cseInstance);
@@ -108,6 +109,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                 }
 
                 var currentFirstLine = 0;
+                var currentLastLine = 0;
 
                 for (var i = 0; i < lastLineTopDistances.length; i++) {
                     if (lastLineTopDistances[currentFirstLine + 1] > editorInputElement.scrollTop) {
@@ -117,7 +119,15 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                     currentFirstLine++;
                 }
 
-                if (Math.abs(currentFirstLine - lastScrollSegment) < 25) {
+                for (var i = 0; i < lastLineTopDistances.length; i++) {
+                    if (lastLineTopDistances[currentLastLine + 1] > editorInputElement.scrollBottom) {
+                        break;
+                    }
+
+                    currentLastLine++;
+                }
+
+                if (Math.abs((scrollingUpwards ? currentFirstLine : currentLastLine) - lastScrollSegment) < 25) {
                     return;
                 }
 
@@ -302,7 +312,11 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                 }, 1000);
             });
 
-            editorInputElement.addEventListener("scroll", renderScrollChange);
+            editorInputElement.addEventListener("scroll", function() {
+                renderScrollChange(editorInputElement.scrollTop < lastScrollTop);
+
+                lastScrollTop = editorInputElement.scrollTop;
+            });
         });
     };
 });

@@ -18,6 +18,9 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         lineNumber: "#98b4e0",
         lineNumberIndent: "white",
         caret: "#dbe21e",
+        scrollbar: "rgba(255, 255, 255, 0.5)",
+        scrollbarHover: "rgba(255, 255, 255, 0.6)",
+        scrollbarPressed: "rgba(255, 255, 255, 0.8)",
         selection: "#4688f2",
         text: "white",
         definition: "#1ee2ae; font-weight: bold;",
@@ -95,6 +98,40 @@ namespace("com.subnodal.codeslate.engine.design", function(exports) {
         addStyle(new styler.Style("editorInput", `
             background: ${theme.selection};
         `, "::selection"));
+
+        addStyle(new styler.Style("editorInput", `
+            width: 15px;
+            height: 15px;
+        `, "::-webkit-scrollbar"));
+
+        addStyle(new styler.Style("editorInput", `
+            width: 0;
+            height: 0;
+        `, "::-webkit-scrollbar-button"));
+
+        addStyle(new styler.Style("editorInput", `
+            background-color: ${theme.scrollbar};
+            border: 2px solid transparent;
+            border-radius: 10px;
+            opacity: 0.5;
+            background-clip: padding-box;
+        `, "::-webkit-scrollbar-thumb"));
+
+        addStyle(new styler.Style("editorInput", `
+            background-color: ${theme.scrollbarHover};
+        `, "::-webkit-scrollbar-thumb:hover"));
+
+        addStyle(new styler.Style("editorInput", `
+            background-color: ${theme.scrollbarPressed};
+        `, "::-webkit-scrollbar-active"));
+
+        addStyle(new styler.Style("editorInput", `
+            background-color: transparent;
+        `, "::-webkit-scrollbar-track"));
+
+        addStyle(new styler.Style("editorInput", `
+            background-color: transparent;
+        `, "::-webkit-scrollbar-corner"));
 
         addStyle(new styler.Style("editorMeasurer", `
             position: absolute;
