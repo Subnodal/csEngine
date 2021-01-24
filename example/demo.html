@@ -6,6 +6,7 @@
 <html>
     <head>
         <title>Codeslate Engine Example</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
         <link rel="stylesheet" href="style.css">
         <script src="https://cdn.subnodal.com/lib/submodules.min.js"></script>
         <script src="https://cdn.subnodal.com/lib/csengine.min.js"></script>
@@ -24,6 +25,28 @@
             // Play around with this code to see what you can do
             // with Codeslate Engine.
         }
+    }
+}
+
+var you = new User();
+
+while (you.funFactsNeeded) {
+    var randomFact = Math.floor(Math.random() * 2);
+
+    if (randomFact == 0) {
+        you.learnFunFact("Codeslate Engine works perfectly well on mobile!");
+        /*
+            Since many mobile browsers convert touch events and virtual keyboard
+            presses to PC events, Codeslate Engine is compatible with many
+            mobile browsers.
+        */
+    } else {
+        you.learnFunFact("Codeslate Engine works with screen readers!");
+        /*
+            Unlike the majority of HTML5-based code editors, Codeslate Engine is
+            accessible! It works with many screen readers, and we also include
+            high-contrast themes for users with vision impairments.
+        */
     }
 }</div>
     </body>
