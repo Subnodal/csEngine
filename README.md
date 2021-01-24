@@ -15,6 +15,8 @@ dependencies and does not pollute the scope when used alongside JavaScript and
 CSS. Codeslate Engine also features great accessibility and mobile support,
 which is lacking in other third-party HTML5 code editor implementations.
 
+[Try out the online demo!](https://subnodal.com/csEngine/example/demo.html)
+
 ## Features
 * Support for multiple languages, with RegEx-able syntax definitions
 * Customisable with many themes, definable using colour + CSS rules
