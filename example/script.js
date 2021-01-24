@@ -5,13 +5,12 @@ var cseInstance;
 window.onload = function() {
     // Some Regex syntax from https://github.com/atom/language-javascript/blob/master/grammars/javascript.cson
     cseInstance = new csengine.CodeslateEngine(document.getElementById("injectionParent"), {
-        wordWrap: true,
         languageData: {
             syntax: [
                 {type: "comment", regex: `(?<=^(?:[\x03\x05].*?\x04)*[^\x03\x04\x05\n]*)(\\/\\/.*?)\\n`, flags: "m"},
                 {type: "string", regex: `(?<!\\/\\*)"(?![^\\/]*\\*\\/)(?:[^"\\\\\x04]|\\\\.)*?"`, spellcheck: true},
-                {type: "string", regex: `(?<!\\/\\*)'(?![^\\/]*\\*\\/)(?:[^'\\\\]|\\\\.)*'`, spellcheck: true},
-                {type: "string", regex: `(?<!\\/\\*)\`(?![^\\/]*\\*\\/)(?:[^\`\\\\]|\\\\.)*\``, spellcheck: true, flags: "s"},
+                {type: "string", regex: `(?<!\\/\\*)'(?![^\\/]*\\*\\/)(?:[^'\\\\\x04]|\\\\.)*'`, spellcheck: true},
+                {type: "string", regex: `(?<!\\/\\*)\`(?![^\\/]*\\*\\/)(?:[^\`\\\\\x04]|\\\\.)*\``, spellcheck: true, flags: "s"},
                 {type: "comment", regex: `\\/\\*.*?\\*\\/`, flags: "s"},
                 {type: "regex", regex: `(?<!\\/\\*)(?<=[\\(\\[\\!\\?\\:\\|])\\s*\\/(?![^\\/]*\\*\\/)(?:[^\\/\\\\\x04\\n]|\\\\.)*?\\/`},
                 {type: "definition", regex: `\\b(function|var|const|let|class|async|await|=>)\\b`},
