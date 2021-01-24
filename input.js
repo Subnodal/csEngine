@@ -147,11 +147,16 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                     lastLineTopDistances = null;
                     roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
                     
-                    var lastLine = editorInputElement.innerHTML.split("\n")[roughCurrentLinePosition];
+                    var lastLine = editorInputElement.innerText.split("\n")[roughCurrentLinePosition];
+                    var indentOpenChars = ((cseInstance.options.languageData || {}).indentOpenChars || []);
                     var indentationChange = 0;
 
-                    if (((cseInstance.options.languageData || {}).indentOpenChars || []).includes(lastLine[lastLine.length - 1])) {
-                        indentationChange++;
+                    for (var i = 0; i < indentOpenChars.length; i++) {
+                        if (lastLine.match(new RegExp(indentOpenChars[i].length > 1 ? `${indentOpenChars[i]}$` : `\\${indentOpenChars[i]}$`))) {
+                            indentationChange++;
+
+                            break;
+                        }
                     }
 
                     document.execCommand("insertHTML", false, "\n" + (
@@ -240,13 +245,16 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                     lastTabbedLines = [];
 
                     gutter.setIndentMarkers(lastTabbedLines);
-                } else {
+                }
+                
+                if (event.keyCode != 9) { // Tab
                     var indentCloseChars = (cseInstance.options.languageData || {}).indentCloseChars || [];
                     var lines = editorInputElement.innerHTML.split("\n");
+                    var textLines = editorInputElement.innerText.split("\n");
                     var unindentMade = false;
                     
                     for (var i = 0; i < indentCloseChars.length; i++) {
-                        if (lines[roughCurrentLinePosition].match(new RegExp(`^\\s*?\\${indentCloseChars[i]}$`))) {
+                        if (textLines[roughCurrentLinePosition].match(new RegExp(indentCloseChars[i].length > 1 ? `^\\s*?${indentCloseChars[i]}$` : `^\\s*?\\${indentCloseChars[i]}$`))) {
                             selection.start -= Math.min(lines[roughCurrentLinePosition].search(/\S|$/), cseInstance.options.indentBy || 4);
                             selection.end -= Math.min(lines[roughCurrentLinePosition].search(/\S|$/), cseInstance.options.indentBy || 4);
 
