@@ -247,7 +247,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                     gutter.setIndentMarkers(lastTabbedLines);
                 }
                 
-                if (event.keyCode != 9) { // Tab
+                if (event.keyCode != 9 && event.keyCode != 16) { // Tab
                     var indentCloseChars = (cseInstance.options.languageData || {}).indentCloseChars || [];
                     var lines = editorInputElement.innerHTML.split("\n");
                     var textLines = editorInputElement.innerText.split("\n");
