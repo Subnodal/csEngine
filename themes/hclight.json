@@ -1,0 +1,22 @@
+{
+    "codeFont": "\"Overpass Mono\", \"Roboto Mono\", monospace",
+    "uiFont": "\"Overpass\", \"Roboto\", sans-serif",
+    "background": "white",
+    "gutter": "#aaaaaa",
+    "lineNumber": "#444444",
+    "lineNumberIndent": "black",
+    "caret": "#00ff00",
+    "scrollbar": "rgba(0, 0, 0, 0.5)",
+    "scrollbarHover": "rgba(0, 0, 0, 0.6)",
+    "scrollbarPressed": "rgba(0, 0, 0, 0.8)",
+    "selection": "#555555",
+    "text": "black",
+    "definition": "#ff00ff; font-weight: bold;",
+    "keyword": "#ff00ff",
+    "string": "#00ffff",
+    "number": "#ff0000",
+    "operator": "#0000ff",
+    "atom": "#ffff00",
+    "comment": "#333333; font-style: italic;",
+    "regex": "#0044ff"
+}
