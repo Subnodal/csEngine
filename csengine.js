@@ -108,6 +108,10 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             });
         }
 
+        onReady(callback) {
+            setTimeout(callback);
+        }
+
         render(from = 0, to = null) {
             var thisScope = this;
             var hasUpdatedInput = false;
