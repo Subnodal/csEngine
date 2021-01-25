@@ -57,6 +57,10 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             });
 
             this.render();
+
+            setTimeout(function() {
+                gutter.render(thisScope, true);                
+            });
         }
 
         inject() {
@@ -100,7 +104,7 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
             this.render();
 
             setTimeout(function() {
-                gutter.render(thisScope, true);                
+                gutter.render(thisScope, true);
             });
         }
 
