@@ -77,7 +77,7 @@ namespace("com.subnodal.codeslate.engine.gutter", function(exports) {
         });
     };
 
-    exports.setIndentMarkers = function(lines) {
+    exports.setIndentMarkers = function(cseInstance, lines) {
         cseInstance.withPart("editorGutter", function(editorGutterElement) {
             var allEditorGutterElements = editorGutterElement.querySelectorAll(`[cse-part="editorGutterLine"]`);
 

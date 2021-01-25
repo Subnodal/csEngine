@@ -183,7 +183,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                 lastTabbedLines = [];
 
                 renderScrollChange();
-                gutter.setIndentMarkers(lastTabbedLines);
+                gutter.setIndentMarkers(cseInstance, lastTabbedLines);
             });
 
             editorInputElement.addEventListener("keyup", function(event) {
@@ -240,11 +240,11 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
                     event.preventDefault();
 
-                    gutter.setIndentMarkers(lastTabbedLines);
+                    gutter.setIndentMarkers(cseInstance, lastTabbedLines);
                 } else if (event.keyCode != 16) { // Shift
                     lastTabbedLines = [];
 
-                    gutter.setIndentMarkers(lastTabbedLines);
+                    gutter.setIndentMarkers(cseInstance, lastTabbedLines);
                 }
                 
                 if (event.keyCode != 9 && event.keyCode != 16 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) { // Tab, Shift, Left, Up, Right, Down
@@ -316,7 +316,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
                     renderScrollChange();
 
-                    gutter.setIndentMarkers(lastTabbedLines);
+                    gutter.setIndentMarkers(cseInstance, lastTabbedLines);
                 }, 1000);
             });
 
