@@ -17,6 +17,7 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
     var lastScrollTop = 0;
     var lastScrollSegment = 0;
     var lastTabbedLines = [];
+    var ignoreNextTab = false;
 
     exports.Selection = class {
         constructor(start, end) {
@@ -140,6 +141,10 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
 
             editorInputElement.addEventListener("keydown", function(event) {
                 if (event.keyCode == 9) { // Tab
+                    if (ignoreNextTab) {
+                        return;
+                    }
+
                     event.preventDefault();
                 }
 
@@ -193,7 +198,18 @@ namespace("com.subnodal.codeslate.engine.input", function(exports) {
                     return; // Prevent Ctrl + A from being cancelled by render updates
                 }
 
+                if (event.keyCode == 27) { // Esc
+                    ignoreNextTab = true;
+
+                    return; // Enables keyboard users to unfocus the editor
+                }
+
                 if (event.keyCode == 9) { // Tab
+                    if (ignoreNextTab) {
+                        ignoreNextTab = false;
+                        return;
+                    }
+
                     lastLineTopDistances = null;
                     roughCurrentLinePosition = exports.getCurrentLinePosition(cseInstance);
 
