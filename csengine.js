@@ -48,6 +48,8 @@ namespace("com.subnodal.codeslate.engine", function(exports) {
         }
 
         set code(code) {
+            var thisScope = this;
+
             this.withPart("editorInput", function(editorInputElement) {
                 if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1) {
                     editorInputElement.innerText = code;
