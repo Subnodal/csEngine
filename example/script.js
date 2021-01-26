@@ -14,7 +14,7 @@ window.onload = function() {
                 {type: "comment", regex: `\\/\\*.*?\\*\\/`, flags: "s"},
                 {type: "regex", regex: `(?<!\\/\\*)(?<=[\\(\\[\\n\\!\\?\\:\\|\\=])\\s*\\/(?![^\\/]*\\*\\/)(?:[^\\/\\\\\x04\\n]|\\\\.)*?\\/`},
                 {type: "definition", regex: `\\b(function|var|const|let|class|async|await|=>)\\b`},
-                {type: "keyword", regex: `\\b(if|else|for|in|do|while|try|catch|finally|break|continue|return|with|yield|new|typeof|instanceof|delete|import|export)\\b`},
+                {type: "keyword", regex: `\\b(if|else|for|in|do|while|try|catch|finally|break|continue|return|with|throw|yield|new|typeof|instanceof|delete|import|export)\\b`},
                 {type: "number", regex: `\\b(?<!\\$)0(x|X)[0-9a-fA-F]+n?\\b(?!\\$)`}, // Hex
                 {type: "number", regex: `\\b(?<!\\$)0(b|B)[01]+n?\\b(?!\\$)`}, // Bin
                 {type: "number", regex: `\\b(?<!\\$)0(o|O)?[0-7]+n?\\b(?!\\$)`}, // Oct
