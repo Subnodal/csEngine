@@ -7,12 +7,12 @@ window.onload = function() {
     cseInstance = new csengine.CodeslateEngine(document.getElementById("injectionParent"), {
         languageData: {
             syntax: [
-                {type: "comment", regex: `(?<=^(?:[\x03\x05].*?\x04)*[^\x03\x04\x05\n]*)(\\/\\/.*?)\\n`, flags: "m"},
-                {type: "string", regex: `(?<!\\/\\*)"(?![^\\/]*\\*\\/)(?:[^"\\\\\x04]|\\\\.)*?"`, spellcheck: true},
-                {type: "string", regex: `(?<!\\/\\*)'(?![^\\/]*\\*\\/)(?:[^'\\\\\x04]|\\\\.)*'`, spellcheck: true},
-                {type: "string", regex: `(?<!\\/\\*)\`(?![^\\/]*\\*\\/)(?:[^\`\\\\\x04]|\\\\.)*\``, spellcheck: true, flags: "s"},
-                {type: "comment", regex: `\\/\\*.*?\\*\\/`, flags: "s"},
-                {type: "regex", regex: `(?<!\\/\\*)(?<=[\\(\\[\\n\\!\\?\\:\\|\\=])\\s*\\/(?![^\\/]*\\*\\/)(?:[^\\/\\\\\x04\\n]|\\\\.)*?\\/`},
+                {type: "comment", regex: `(?<=^.*)(\\/\\/.*?)\\n`},
+                {type: "string", regex: `(?<!\\/\\*)"(?![^\\/]*\\*\\/)(?:[^"\\\\\x04\\n]|\\\\.)*?"`, spellcheck: true},
+                {type: "string", regex: `(?<!\\/\\*)'(?![^\\/]*\\*\\/)(?:[^'\\\\\x04\\n]|\\\\.)*'`, spellcheck: true},
+                {type: "string", regex: `(?<!\\/\\*)\`(?![^\\/]*\\*\\/)(?:[^\`\\\\\x04]|\\\\.)*\``, spellcheck: true},
+                {type: "comment", regex: `\\/\\*.*\\*\\/`},
+                {type: "regex", regex: `(?<!\\/\\*)(?<=[\\(\\[\\n\\!\\?\\:\\|\\=])\\s*\\/(?![^\\/]*\\*\\/)(?:[^\\/\\\\\x04\\n]|\\\\.)+?\\/`},
                 {type: "definition", regex: `\\b(function|var|const|let|class|async|await|=>)\\b`},
                 {type: "keyword", regex: `\\b(if|else|for|in|do|while|try|catch|finally|break|continue|return|with|yield|new|typeof|instanceof|delete|import|export)\\b`},
                 {type: "number", regex: `\\b(?<!\\$)0(x|X)[0-9a-fA-F]+n?\\b(?!\\$)`}, // Hex
