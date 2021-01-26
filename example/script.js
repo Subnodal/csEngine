@@ -11,7 +11,7 @@ window.onload = function() {
                 {type: "string", regex: `(?<!\\/\\*)"(?![^\\/]*\\*\\/)(?:[^"\\\\\x04\\n]|\\\\.)*?"`, spellcheck: true},
                 {type: "string", regex: `(?<!\\/\\*)'(?![^\\/]*\\*\\/)(?:[^'\\\\\x04\\n]|\\\\.)*'`, spellcheck: true},
                 {type: "string", regex: `(?<!\\/\\*)\`(?![^\\/]*\\*\\/)(?:[^\`\\\\\x04]|\\\\.)*\``, spellcheck: true},
-                {type: "comment", regex: `\\/\\*.*\\*\\/`},
+                {type: "comment", regex: `\\/\\*.*?\\*\\/`},
                 {type: "regex", regex: `(?<!\\/\\*)(?<=[\\(\\[\\n\\!\\?\\:\\|\\=])\\s*\\/(?![^\\/]*\\*\\/)(?:[^\\/\\\\\x04\\n]|\\\\.)+?\\/`},
                 {type: "definition", regex: `\\b(function|var|const|let|class|async|await|=>)\\b`},
                 {type: "keyword", regex: `\\b(if|else|for|in|do|while|try|catch|finally|break|continue|return|with|yield|new|typeof|instanceof|delete|import|export)\\b`},
