@@ -31,16 +31,13 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
     }
 
     function parseSyntaxTree(code, syntax) {
-        for (var i = 0; i < syntax.length; i++) {
-            var syntaxProperties = syntax[i];
+        var allRegexPatterns = syntax.map((i) => "(?:" + i.regex + ")" || "");
 
-            code = code.replace(
-                new RegExp(`(?<!${HTML_ESCAPE_SYNTAX_OPEN})(?:` + (syntaxProperties.regex || "") + `)` + (
-                    `(?![^` +
-                    `${HTML_ESCAPE_SYNTAX_OPEN}` +
-                    `]*${HTML_ESCAPE_SYNTAX_END})`
-                ), "g" + (syntaxProperties.flags || "")),
-                function() {
+        code = code.replace(new RegExp(allRegexPatterns.join("|"), "gs"), function(match) {
+            for (var i = 0; i < syntax.length; i++) {
+                var syntaxProperties = syntax[i];
+
+                if (match.match(new RegExp(syntaxProperties.regex || "", "s"))) {
                     return (
                         HTML_ESCAPE_SYNTAX_OPEN +
                         (syntaxProperties.type || "") +
@@ -51,8 +48,10 @@ namespace("com.subnodal.codeslate.engine.formatter", function(exports) {
                         HTML_ESCAPE_SYNTAX_END
                     );
                 }
-            );
-        }
+            }
+
+            return match;
+        });
 
         return code;
     }
